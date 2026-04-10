@@ -3,29 +3,28 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Bet Calculator Dashboard</title>
+  <title>Smart Bet Optimizer</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --bg: #08101c;
-      --panel: rgba(15, 23, 38, 0.78);
-      --panel-soft: rgba(18, 28, 46, 0.88);
+      --bg: #09111e;
+      --panel: rgba(15, 22, 36, 0.82);
+      --panel-soft: rgba(19, 29, 47, 0.92);
       --line: rgba(255, 255, 255, 0.08);
-      --text: #f5f7fb;
-      --muted: #93a0b8;
-      --accent: #5da8ff;
-      --accent-2: #8c7bff;
-      --profit: #54f2a2;
-      --loss: #ff7388;
+      --text: #f4f7fb;
+      --muted: #94a2ba;
+      --accent: #5ea8ff;
+      --accent-2: #8b7dff;
+      --profit: #55f2a3;
+      --loss: #ff7b8d;
       --warning: #ffbf66;
-      --shadow: 0 22px 50px rgba(0, 0, 0, 0.28);
-      --button: linear-gradient(90deg, #5da8ff 0%, #7c89ff 55%, #54f2a2 100%);
+      --button: linear-gradient(90deg, #5ea8ff 0%, #8b7dff 55%, #55f2a3 100%);
+      --shadow: 0 24px 60px rgba(0, 0, 0, 0.30);
     }
 
     * { box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
 
     body {
       margin: 0;
@@ -33,105 +32,71 @@
       font-family: "Inter", sans-serif;
       color: var(--text);
       background:
-        radial-gradient(circle at 10% 10%, rgba(93, 168, 255, 0.16), transparent 25%),
-        radial-gradient(circle at 85% 10%, rgba(140, 123, 255, 0.14), transparent 24%),
-        radial-gradient(circle at 60% 85%, rgba(84, 242, 162, 0.10), transparent 22%),
-        linear-gradient(180deg, #08101c 0%, #060b14 100%);
+        radial-gradient(circle at 10% 10%, rgba(94, 168, 255, 0.16), transparent 24%),
+        radial-gradient(circle at 85% 10%, rgba(139, 125, 255, 0.14), transparent 22%),
+        radial-gradient(circle at 60% 85%, rgba(85, 242, 163, 0.10), transparent 22%),
+        linear-gradient(180deg, #09111e 0%, #060b13 100%);
       overflow-x: hidden;
-      position: relative;
-    }
-
-    body::before,
-    body::after {
-      content: "";
-      position: fixed;
-      inset: -10%;
-      pointer-events: none;
-      z-index: 0;
     }
 
     body::before {
+      content: "";
+      position: fixed;
+      inset: -10%;
       background:
-        radial-gradient(circle at 18% 24%, rgba(93, 168, 255, 0.12), transparent 18%),
-        radial-gradient(circle at 72% 28%, rgba(140, 123, 255, 0.12), transparent 20%),
-        radial-gradient(circle at 55% 78%, rgba(84, 242, 162, 0.10), transparent 16%);
+        radial-gradient(circle at 20% 25%, rgba(94, 168, 255, 0.14), transparent 18%),
+        radial-gradient(circle at 72% 26%, rgba(139, 125, 255, 0.12), transparent 20%),
+        radial-gradient(circle at 52% 78%, rgba(85, 242, 163, 0.10), transparent 16%);
       filter: blur(38px);
+      pointer-events: none;
       animation: ambient 14s ease-in-out infinite alternate;
-    }
-
-    body::after {
-      background: linear-gradient(120deg, transparent 0%, rgba(255, 255, 255, 0.02) 46%, transparent 54%);
-      animation: sheen 18s linear infinite;
-      opacity: 0.55;
     }
 
     @keyframes ambient {
       from { transform: scale(1) translateY(0); }
-      to { transform: scale(1.06) translateY(-1.5%); }
-    }
-
-    @keyframes sheen {
-      from { transform: translateX(-10%); }
-      to { transform: translateX(10%); }
+      to { transform: scale(1.05) translateY(-1.5%); }
     }
 
     @keyframes reveal {
-      from { opacity: 0; transform: translateY(20px) scale(0.98); }
+      from { opacity: 0; transform: translateY(18px) scale(0.98); }
       to { opacity: 1; transform: translateY(0) scale(1); }
     }
 
     @keyframes metricUpdate {
-      0% { opacity: 0.75; transform: scale(0.97); }
+      0% { opacity: 0.72; transform: scale(0.97); }
       100% { opacity: 1; transform: scale(1); }
     }
 
     @keyframes buttonGlow {
       0%, 100% { box-shadow: 0 0 0 rgba(0,0,0,0); }
-      50% { box-shadow: 0 0 28px rgba(93, 168, 255, 0.16); }
+      50% { box-shadow: 0 0 28px rgba(94, 168, 255, 0.16); }
     }
 
     .app {
-      max-width: 1180px;
+      max-width: 1140px;
       margin: 0 auto;
-      padding: 28px 18px 42px;
+      padding: 28px 18px 40px;
       position: relative;
       z-index: 1;
     }
 
-    .credit {
-      position: absolute;
-      top: 10px;
-      right: 18px;
-      color: rgba(255,255,255,0.56);
-      font-size: 0.8rem;
-      letter-spacing: 0.06em;
-    }
-
     .hero {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 18px;
       margin-bottom: 18px;
-      animation: reveal 800ms cubic-bezier(.2,.8,.2,1) both;
-    }
-
-    .hero-copy {
-      max-width: 560px;
+      animation: reveal 840ms cubic-bezier(.2,.8,.2,1) both;
     }
 
     .eyebrow {
       margin: 0 0 8px;
       color: var(--accent);
       text-transform: uppercase;
-      letter-spacing: 0.2em;
+      letter-spacing: 0.20em;
       font-size: 0.72rem;
       font-weight: 700;
     }
 
     h1 {
       margin: 0;
-      font-size: clamp(1.8rem, 4vw, 3.1rem);
+      font-size: clamp(1.9rem, 4vw, 3rem);
       line-height: 1;
       letter-spacing: -0.04em;
       font-weight: 800;
@@ -139,7 +104,7 @@
 
     .sub {
       margin: 12px 0 0;
-      max-width: 520px;
+      max-width: 560px;
       color: var(--muted);
       font-size: 0.98rem;
       line-height: 1.6;
@@ -147,7 +112,7 @@
 
     .shell {
       display: grid;
-      grid-template-columns: 1.05fr 0.95fr;
+      grid-template-columns: 1fr 1fr;
       gap: 18px;
       align-items: start;
     }
@@ -159,24 +124,24 @@
       border-radius: 24px;
       border: 1px solid var(--line);
       background: var(--panel);
-      box-shadow: var(--shadow);
       backdrop-filter: blur(16px);
-      animation: reveal 880ms cubic-bezier(.2,.8,.2,1) both;
-      transition: transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease;
+      box-shadow: var(--shadow);
+      animation: reveal 900ms cubic-bezier(.2,.8,.2,1) both;
+      transition: transform 220ms ease, border-color 220ms ease, box-shadow 220ms ease;
     }
 
     .card::after {
       content: "";
       position: absolute;
       inset: 0;
-      background: linear-gradient(145deg, rgba(255,255,255,0.05), transparent 32%);
+      background: linear-gradient(145deg, rgba(255,255,255,0.05), transparent 34%);
       pointer-events: none;
     }
 
     .card:hover {
       transform: scale(1.01);
       border-color: rgba(255,255,255,0.12);
-      box-shadow: 0 26px 56px rgba(0, 0, 0, 0.32);
+      box-shadow: 0 28px 58px rgba(0,0,0,0.32);
     }
 
     .title-row {
@@ -189,7 +154,7 @@
 
     .title {
       margin: 0;
-      color: #a9b5ca;
+      color: #a7b4cb;
       text-transform: uppercase;
       letter-spacing: 0.16em;
       font-size: 0.78rem;
@@ -199,30 +164,27 @@
     .pill {
       padding: 8px 12px;
       border-radius: 999px;
-      background: linear-gradient(90deg, rgba(93,168,255,0.14), rgba(140,123,255,0.14));
-      color: #dfe8f8;
+      background: linear-gradient(90deg, rgba(94,168,255,0.14), rgba(139,125,255,0.14));
+      color: #dde5f6;
       font-size: 0.76rem;
       font-weight: 600;
     }
 
-    .grid-2 {
+    .grid-2,
+    .grid-4 {
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 14px;
     }
 
-    .grid-4 {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 12px;
-    }
+    .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .grid-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 
     .field { margin-bottom: 14px; }
 
     .label {
       display: block;
       margin-bottom: 8px;
-      color: #7f8ea8;
+      color: #7e8ba5;
       text-transform: uppercase;
       letter-spacing: 0.14em;
       font-size: 0.72rem;
@@ -246,37 +208,8 @@
     input:hover,
     input:focus {
       outline: none;
-      border-color: rgba(93,168,255,0.28);
-      box-shadow: 0 0 0 4px rgba(93,168,255,0.08);
-      transform: translateY(-1px);
-    }
-
-    .segmented {
-      display: inline-grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 6px;
-      padding: 6px;
-      width: 100%;
-      border-radius: 18px;
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.08);
-    }
-
-    .seg-btn {
-      padding: 12px 14px;
-      border: 0;
-      border-radius: 14px;
-      background: transparent;
-      color: var(--muted);
-      font-weight: 700;
-      letter-spacing: 0.02em;
-      cursor: pointer;
-      transition: background 180ms ease, color 180ms ease, transform 180ms ease;
-    }
-
-    .seg-btn.active {
-      background: linear-gradient(90deg, rgba(93,168,255,0.18), rgba(140,123,255,0.16));
-      color: var(--text);
+      border-color: rgba(94,168,255,0.30);
+      box-shadow: 0 0 0 4px rgba(94,168,255,0.08);
       transform: translateY(-1px);
     }
 
@@ -284,148 +217,74 @@
       margin-top: 8px;
       border: 0;
       background: var(--button);
-      color: #07101b;
+      color: #07101c;
       font-weight: 800;
       letter-spacing: 0.12em;
       text-transform: uppercase;
       cursor: pointer;
-      transition: transform 180ms ease, filter 180ms ease;
       animation: buttonGlow 4s ease-in-out infinite;
+      transition: transform 180ms ease, filter 180ms ease;
     }
 
     .primary-btn:hover {
-      filter: brightness(1.03);
       transform: translateY(-1px);
+      filter: brightness(1.03);
     }
 
-    .insight-banner {
+    .hint,
+    .summary-note,
+    .error {
       margin-top: 12px;
       padding: 14px 16px;
       border-radius: 18px;
-      background: linear-gradient(135deg, rgba(93,168,255,0.10), rgba(140,123,255,0.08));
-      border: 1px solid rgba(93,168,255,0.14);
-      color: #dde7fb;
       line-height: 1.55;
       font-size: 0.94rem;
     }
 
-    .summary-card {
-      min-height: 100%;
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
+    .hint {
+      color: #d8e5f9;
+      border: 1px solid rgba(94,168,255,0.14);
+      background: linear-gradient(135deg, rgba(94,168,255,0.10), rgba(139,125,255,0.08));
     }
-
-    .stat-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 12px;
-    }
-
-    .stat {
-      padding: 16px;
-      border-radius: 20px;
-      background:
-        linear-gradient(145deg, rgba(255,255,255,0.04), transparent 55%),
-        rgba(13, 19, 31, 0.82);
-      border: 1px solid rgba(255,255,255,0.06);
-    }
-
-    .stat-label {
-      color: #7f8ea8;
-      text-transform: uppercase;
-      letter-spacing: 0.14em;
-      font-size: 0.7rem;
-      margin-bottom: 10px;
-      font-weight: 600;
-    }
-
-    .stat-value {
-      font-size: clamp(1.4rem, 2vw, 2rem);
-      font-weight: 800;
-      line-height: 1;
-      letter-spacing: -0.03em;
-      white-space: nowrap;
-    }
-
-    .muted-value { color: #dbe4f4; }
-    .profit { color: var(--profit); }
-    .loss { color: var(--loss); }
-    .accent { color: #8fc4ff; }
 
     .summary-note {
-      padding: 14px 16px;
-      border-radius: 18px;
-      background: linear-gradient(135deg, rgba(84,242,162,0.08), rgba(93,168,255,0.08));
-      border: 1px solid rgba(84,242,162,0.14);
-      color: #d7e2f5;
-      line-height: 1.55;
-      font-size: 0.93rem;
+      color: #d9e4f6;
+      border: 1px solid rgba(85,242,163,0.14);
+      background: linear-gradient(135deg, rgba(85,242,163,0.08), rgba(94,168,255,0.08));
     }
 
-    .opportunity-card {
-      background:
-        linear-gradient(135deg, rgba(255,191,102,0.14), rgba(93,168,255,0.10), rgba(84,242,162,0.08)),
-        rgba(15, 22, 35, 0.9);
-      border: 1px solid rgba(255,191,102,0.24);
-      box-shadow: inset 0 0 0 1px rgba(255,191,102,0.10);
+    .error {
+      display: none;
+      color: #ffc7d0;
+      border: 1px solid rgba(255,123,141,0.18);
+      background: rgba(255,123,141,0.08);
     }
 
-    .opportunity-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 12px;
-      margin-top: 14px;
-    }
-
-    .opportunity-metric {
-      padding: 14px;
-      border-radius: 18px;
-      background: rgba(10, 16, 28, 0.54);
-      border: 1px solid rgba(255,255,255,0.06);
-    }
-
-    .results {
-      margin-top: 18px;
-      display: grid;
-      gap: 18px;
-    }
-
-    .split-grid {
+    .stat-grid,
+    .result-grid {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 14px;
+      gap: 12px;
     }
 
-    .bet-box,
-    .scenario-box {
-      padding: 18px;
-      border-radius: 22px;
+    .stat,
+    .result-card {
+      padding: 16px;
+      border-radius: 20px;
       border: 1px solid rgba(255,255,255,0.06);
       background:
-        linear-gradient(145deg, rgba(255,255,255,0.05), transparent 45%),
-        rgba(12, 18, 30, 0.86);
+        linear-gradient(145deg, rgba(255,255,255,0.05), transparent 48%),
+        rgba(11, 17, 28, 0.86);
       transition: transform 220ms ease, border-color 220ms ease;
     }
 
-    .bet-box:hover,
-    .scenario-box:hover {
+    .stat:hover,
+    .result-card:hover {
       transform: scale(1.012);
       border-color: rgba(255,255,255,0.12);
     }
 
-    .bet-box.a {
-      background:
-        radial-gradient(circle at top left, rgba(93,168,255,0.15), transparent 46%),
-        rgba(12, 18, 30, 0.86);
-    }
-
-    .bet-box.b {
-      background:
-        radial-gradient(circle at top right, rgba(140,123,255,0.14), transparent 46%),
-        rgba(12, 18, 30, 0.86);
-    }
-
+    .stat-label,
     .mini-label {
       color: #7f8ea8;
       text-transform: uppercase;
@@ -435,179 +294,133 @@
       font-weight: 600;
     }
 
+    .stat-value,
     .big-number {
-      font-size: clamp(1.5rem, 2.2vw, 2.2rem);
+      font-size: clamp(1.4rem, 2vw, 2rem);
       font-weight: 800;
       line-height: 1;
       letter-spacing: -0.03em;
-      margin-bottom: 8px;
       white-space: nowrap;
     }
 
+    .muted-value { color: #dbe4f5; }
+    .accent { color: #8ec4ff; }
+    .profit { color: var(--profit); }
+    .loss { color: var(--loss); }
+
     .sub-line {
-      color: #d9e5f6;
+      margin-top: 8px;
+      color: #d6e2f5;
       font-size: 0.92rem;
-    }
-
-    .scenario-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 14px;
-    }
-
-    .scenario-box.best {
-      border-color: rgba(84,242,162,0.20);
-      box-shadow: inset 0 0 0 1px rgba(84,242,162,0.12);
-    }
-
-    .scenario-box.worst {
-      border-color: rgba(255,115,136,0.22);
-      box-shadow: inset 0 0 0 1px rgba(255,115,136,0.12);
-    }
-
-    .scenario-desc {
-      color: var(--muted);
-      font-size: 0.9rem;
       line-height: 1.5;
-      margin-top: 6px;
+    }
+
+    .result-card.best-opportunity {
+      background:
+        linear-gradient(135deg, rgba(255,191,102,0.14), rgba(94,168,255,0.10), rgba(85,242,163,0.08)),
+        rgba(11, 17, 28, 0.9);
+      border-color: rgba(255,191,102,0.22);
+      box-shadow: inset 0 0 0 1px rgba(255,191,102,0.10);
     }
 
     .metric-animate {
       animation: metricUpdate 360ms ease;
     }
 
-    .error {
-      display: none;
-      margin-top: 12px;
-      padding: 14px 16px;
-      border-radius: 18px;
-      background: rgba(255,115,136,0.08);
-      border: 1px solid rgba(255,115,136,0.18);
-      color: #ffc8d1;
-      line-height: 1.55;
-      font-size: 0.93rem;
-    }
-
-    @media (max-width: 980px) {
-      .shell,
-      .hero {
+    @media (max-width: 900px) {
+      .shell {
         grid-template-columns: 1fr;
-        display: grid;
-      }
-
-      .hero {
-        gap: 12px;
       }
     }
 
-    @media (max-width: 760px) {
+    @media (max-width: 700px) {
       .grid-2,
       .grid-4,
-      .split-grid,
-      .scenario-grid,
       .stat-grid,
-      .opportunity-grid {
+      .result-grid {
         grid-template-columns: 1fr;
       }
 
       .title-row {
-        align-items: flex-start;
         flex-direction: column;
+        align-items: flex-start;
       }
     }
   </style>
 </head>
 <body>
   <div class="app">
-    <div class="credit">by its_vinitgujar</div>
-
     <section class="hero">
-      <div class="hero-copy">
-        <p class="eyebrow">Premium Bet Dashboard</p>
-        <h1>Smart Bet Optimizer</h1>
-        <p class="sub">Maximize profit with hedging and bonus-aware strategy.</p>
-      </div>
+      <p class="eyebrow">Auto Optimized Betting</p>
+      <h1>Smart Bet Optimizer</h1>
+      <p class="sub">Enter only team names and odds. The system automatically finds the best stake split under the 100 USDT stake cap and 250 USDT payout cap, then shows normal and combined outcomes instantly.</p>
     </section>
 
     <section class="shell">
       <section class="card">
         <div class="title-row">
-          <h2 class="title">Match Setup</h2>
-          <span class="pill" id="modePill">Manual Stakes</span>
+          <h2 class="title">Odds Input</h2>
+          <span class="pill">Auto Stakes</span>
         </div>
 
         <div class="grid-2">
           <div>
             <div class="field">
-              <label class="label" for="teamAName">Team A</label>
-              <input id="teamAName" type="text" value="RR" />
+              <label class="label" for="team1Name">Team 1 Name</label>
+              <input id="team1Name" type="text" value="RR" />
             </div>
             <div class="field">
-              <label class="label" for="teamAOdds">Team A Odds</label>
-              <input id="teamAOdds" type="number" step="0.01" min="1.01" value="2.40" />
+              <label class="label" for="team1Odds">Team 1 Odds</label>
+              <input id="team1Odds" type="number" step="0.01" min="1.01" value="2.40" />
             </div>
           </div>
           <div>
             <div class="field">
-              <label class="label" for="teamBName">Team B</label>
-              <input id="teamBName" type="text" value="MI" />
+              <label class="label" for="team2Name">Team 2 Name</label>
+              <input id="team2Name" type="text" value="MI" />
             </div>
             <div class="field">
-              <label class="label" for="teamBOdds">Team B Odds</label>
-              <input id="teamBOdds" type="number" step="0.01" min="1.01" value="1.57" />
+              <label class="label" for="team2Odds">Team 2 Odds</label>
+              <input id="team2Odds" type="number" step="0.01" min="1.01" value="1.57" />
             </div>
           </div>
         </div>
 
-        <div class="grid-2">
-          <div class="field">
-            <label class="label" for="teamAStake">Team A Stake</label>
-            <input id="teamAStake" type="number" step="0.01" min="0" max="100" value="65.42" />
-          </div>
-          <div class="field">
-            <label class="label" for="teamBStake">Team B Stake</label>
-            <input id="teamBStake" type="number" step="0.01" min="0" max="100" value="100" />
-          </div>
-        </div>
-
-        <div class="grid-2">
-          <div class="field">
-            <label class="label" for="payoutCap">Max Payout Per Bet</label>
-            <input id="payoutCap" type="number" step="0.01" min="0" value="250" />
-          </div>
-          <div class="field">
-            <label class="label" for="specialCap">Special Payout Cap</label>
-            <input id="specialCap" type="number" step="0.01" min="0" value="250" />
-          </div>
-        </div>
-
-        <button type="button" class="primary-btn" id="calculateBtn">Calculate Best Split</button>
-        <div class="insight-banner" id="strategyLine"></div>
+        <button type="button" class="primary-btn" id="calculateBtn">Optimize Stakes</button>
+        <div class="hint" id="strategyLine"></div>
         <div class="error" id="errorBox"></div>
       </section>
 
-      <aside class="card summary-card">
+      <aside class="card">
         <div class="title-row">
-          <h2 class="title">Live Summary</h2>
-          <span class="pill">Dashboard</span>
+          <h2 class="title">Quick Summary</h2>
+          <span class="pill">Live Output</span>
         </div>
 
         <div class="stat-grid">
           <div class="stat">
-            <div class="stat-label">Total Stake</div>
+            <div class="stat-label">Suggested Team 1 Stake</div>
+            <div class="stat-value accent" id="stake1Stat">$0.00</div>
+          </div>
+          <div class="stat">
+            <div class="stat-label">Suggested Team 2 Stake</div>
+            <div class="stat-value accent" id="stake2Stat">$0.00</div>
+          </div>
+          <div class="stat">
+            <div class="stat-label">Total Investment</div>
             <div class="stat-value muted-value" id="totalStakeStat">$0.00</div>
           </div>
           <div class="stat">
             <div class="stat-label">Max Possible Payout</div>
-            <div class="stat-value accent" id="maxPayoutStat">$0.00</div>
+            <div class="stat-value profit" id="maxPayoutStat">$0.00</div>
           </div>
           <div class="stat">
-            <div class="stat-label">Worst-Case Loss</div>
-            <div class="stat-value loss" id="worstLossStat">$0.00</div>
-          </div>
-          <div class="stat">
-            <div class="stat-label">Best-Case Profit</div>
+            <div class="stat-label">Best Case Profit</div>
             <div class="stat-value profit" id="bestProfitStat">$0.00</div>
+          </div>
+          <div class="stat">
+            <div class="stat-label">Worst Case Loss</div>
+            <div class="stat-value loss" id="worstLossStat">$0.00</div>
           </div>
         </div>
 
@@ -615,105 +428,92 @@
       </aside>
     </section>
 
-    <section class="results">
-      <section class="card opportunity-card">
-        <div class="title-row">
-          <h2 class="title">🔥 Best Opportunity</h2>
-          <span class="pill">Top Combined Return</span>
-        </div>
+    <section class="card" style="margin-top:18px;">
+      <div class="title-row">
+        <h2 class="title">Outcome Cards</h2>
+        <span class="pill">Capped at 250 USDT Per Team</span>
+      </div>
 
-        <div class="big-number profit" id="bestOpportunityNet">+$0.00</div>
-        <div class="sub-line" id="bestOpportunityDesc">Waiting for calculation...</div>
+      <div class="result-grid">
+        <article class="result-card">
+          <div class="mini-label" id="team1WinLabel">Team 1 Wins</div>
+          <div class="big-number" id="team1WinNet">-$0.00</div>
+          <div class="sub-line" id="team1WinReturn">Payout: $0.00</div>
+        </article>
 
-        <div class="opportunity-grid">
-          <div class="opportunity-metric">
-            <div class="mini-label">Total Return</div>
-            <div class="big-number accent" id="bestOpportunityReturn">$0.00</div>
-          </div>
-          <div class="opportunity-metric">
-            <div class="mini-label">Total Investment</div>
-            <div class="big-number" id="bestOpportunityStake">$0.00</div>
-          </div>
-          <div class="opportunity-metric">
-            <div class="mini-label">Net Profit</div>
-            <div class="big-number profit" id="bestOpportunityProfit">+$0.00</div>
-          </div>
-        </div>
-      </section>
+        <article class="result-card">
+          <div class="mini-label" id="team2WinLabel">Team 2 Wins</div>
+          <div class="big-number" id="team2WinNet">-$0.00</div>
+          <div class="sub-line" id="team2WinReturn">Payout: $0.00</div>
+        </article>
 
-      <section class="card">
-        <div class="title-row">
-          <h2 class="title">Best Split</h2>
-          <span class="pill" id="hedgePill">Hedged View</span>
-        </div>
+        <article class="result-card best-opportunity">
+          <div class="mini-label">🔥 Best Opportunity Scenario</div>
+          <div class="big-number profit" id="combinedNet">+$0.00</div>
+          <div class="sub-line" id="combinedReturn">Total payout: $0.00</div>
+          <div class="sub-line" id="combinedDesc">Waiting for calculation...</div>
+        </article>
 
-        <div class="split-grid">
-          <div class="bet-box a">
-            <div class="mini-label" id="teamAStakeLabel">Team A Stake</div>
-            <div class="big-number accent" id="teamAStakeValue">$0.00</div>
-            <div class="sub-line" id="teamAPayoutValue">Payout: $0.00</div>
-          </div>
-          <div class="bet-box b">
-            <div class="mini-label" id="teamBStakeLabel">Team B Stake</div>
-            <div class="big-number" style="color:#b6a8ff" id="teamBStakeValue">$0.00</div>
-            <div class="sub-line" id="teamBPayoutValue">Payout: $0.00</div>
-          </div>
-        </div>
-      </section>
-
+        <article class="result-card">
+          <div class="mini-label">System Read</div>
+          <div class="big-number accent" id="optimizerScore">0.00</div>
+          <div class="sub-line" id="optimizerDesc">Optimizer score</div>
+        </article>
+      </div>
     </section>
   </div>
 
   <script>
-    const $ = (id) => document.getElementById(id);
+    const MAX_STAKE = 100;
+    const MAX_PAYOUT = 250;
+    const STEP = 0.5;
 
+    const $ = (id) => document.getElementById(id);
     const els = {
-      teamAName: $("teamAName"),
-      teamBName: $("teamBName"),
-      teamAOdds: $("teamAOdds"),
-      teamBOdds: $("teamBOdds"),
-      teamAStake: $("teamAStake"),
-      teamBStake: $("teamBStake"),
-      payoutCap: $("payoutCap"),
-      specialCap: $("specialCap"),
+      team1Name: $("team1Name"),
+      team2Name: $("team2Name"),
+      team1Odds: $("team1Odds"),
+      team2Odds: $("team2Odds"),
       calculateBtn: $("calculateBtn"),
-      modePill: $("modePill"),
       strategyLine: $("strategyLine"),
       errorBox: $("errorBox"),
+      stake1Stat: $("stake1Stat"),
+      stake2Stat: $("stake2Stat"),
       totalStakeStat: $("totalStakeStat"),
       maxPayoutStat: $("maxPayoutStat"),
-      worstLossStat: $("worstLossStat"),
       bestProfitStat: $("bestProfitStat"),
+      worstLossStat: $("worstLossStat"),
       summaryNote: $("summaryNote"),
-      bestOpportunityNet: $("bestOpportunityNet"),
-      bestOpportunityDesc: $("bestOpportunityDesc"),
-      bestOpportunityReturn: $("bestOpportunityReturn"),
-      bestOpportunityStake: $("bestOpportunityStake"),
-      bestOpportunityProfit: $("bestOpportunityProfit"),
-      hedgePill: $("hedgePill"),
-      teamAStakeLabel: $("teamAStakeLabel"),
-      teamBStakeLabel: $("teamBStakeLabel"),
-      teamAStakeValue: $("teamAStakeValue"),
-      teamBStakeValue: $("teamBStakeValue"),
-      teamAPayoutValue: $("teamAPayoutValue"),
-      teamBPayoutValue: $("teamBPayoutValue")
+      team1WinLabel: $("team1WinLabel"),
+      team2WinLabel: $("team2WinLabel"),
+      team1WinNet: $("team1WinNet"),
+      team2WinNet: $("team2WinNet"),
+      team1WinReturn: $("team1WinReturn"),
+      team2WinReturn: $("team2WinReturn"),
+      combinedNet: $("combinedNet"),
+      combinedReturn: $("combinedReturn"),
+      combinedDesc: $("combinedDesc"),
+      optimizerScore: $("optimizerScore"),
+      optimizerDesc: $("optimizerDesc")
     };
 
     const animatedNodes = [
+      els.stake1Stat,
+      els.stake2Stat,
       els.totalStakeStat,
       els.maxPayoutStat,
-      els.worstLossStat,
       els.bestProfitStat,
-      els.bestOpportunityNet,
-      els.bestOpportunityDesc,
-      els.bestOpportunityReturn,
-      els.bestOpportunityStake,
-      els.bestOpportunityProfit,
-      els.teamAStakeValue,
-      els.teamBStakeValue,
-      els.teamAPayoutValue,
-      els.teamBPayoutValue,
+      els.worstLossStat,
       els.summaryNote,
+      els.team1WinNet,
+      els.team2WinNet,
+      els.team1WinReturn,
+      els.team2WinReturn,
+      els.combinedNet,
+      els.combinedReturn,
+      els.combinedDesc,
+      els.optimizerScore,
+      els.optimizerDesc,
       els.strategyLine
     ];
 
@@ -732,9 +532,9 @@
 
     function animateCurrency(el, value, options = {}) {
       const { prefix = "", signed = false, duration = 700 } = options;
-      const start = performance.now();
       const fromValue = Number(el.dataset.lastValue || 0);
       const toValue = Number(value);
+      const start = performance.now();
       el.dataset.lastValue = String(toValue);
 
       function frame(now) {
@@ -772,138 +572,109 @@
 
     function readInputs() {
       const inputs = {
-        teamAName: (els.teamAName.value || "Team A").trim(),
-        teamBName: (els.teamBName.value || "Team B").trim(),
-        teamAOdds: Number(els.teamAOdds.value),
-        teamBOdds: Number(els.teamBOdds.value),
-        teamAStake: Number(els.teamAStake.value),
-        teamBStake: Number(els.teamBStake.value),
-        payoutCap: Number(els.payoutCap.value),
-        specialCap: Number(els.specialCap.value)
+        team1Name: (els.team1Name.value || "Team 1").trim(),
+        team2Name: (els.team2Name.value || "Team 2").trim(),
+        team1Odds: Number(els.team1Odds.value),
+        team2Odds: Number(els.team2Odds.value)
       };
 
-      if (!inputs.teamAName || !inputs.teamBName) {
+      if (!inputs.team1Name || !inputs.team2Name) {
         throw new Error("Both team names are required.");
       }
-      if (!Number.isFinite(inputs.teamAOdds) || inputs.teamAOdds <= 1 || !Number.isFinite(inputs.teamBOdds) || inputs.teamBOdds <= 1) {
+      if (!Number.isFinite(inputs.team1Odds) || inputs.team1Odds <= 1 || !Number.isFinite(inputs.team2Odds) || inputs.team2Odds <= 1) {
         throw new Error("Both odds must be valid numbers greater than 1.");
       }
-      if (!Number.isFinite(inputs.teamAStake) || inputs.teamAStake < 0 || !Number.isFinite(inputs.teamBStake) || inputs.teamBStake < 0) {
-        throw new Error("Both stake inputs must be valid numbers.");
-      }
-      if (inputs.teamAStake > 100 || inputs.teamBStake > 100) {
-        throw new Error("Max stake per team is 100 USDT.");
-      }
-      if (!Number.isFinite(inputs.payoutCap) || inputs.payoutCap < 0) {
-        throw new Error("Max payout per bet must be zero or greater.");
-      }
-      if (!Number.isFinite(inputs.specialCap) || inputs.specialCap < 0) {
-        throw new Error("Max special payout must be zero or greater.");
-      }
-
       return inputs;
     }
 
-    function buildScenario(name, totalReturn, totalStake, description) {
-      const net = round2(totalReturn - totalStake);
-      return {
-        name,
-        totalReturn: round2(totalReturn),
-        net,
-        description
-      };
+    function payoutFor(stake, odds) {
+      return round2(Math.min(stake * odds, MAX_PAYOUT));
     }
 
-    function analyze(inputs, split) {
-      const totalStake = round2(split.teamAStake + split.teamBStake);
-      const payout1 = round2(Math.min(split.teamAStake * inputs.teamAOdds, inputs.payoutCap));
-      const payout2 = round2(Math.min(split.teamBStake * inputs.teamBOdds, inputs.payoutCap));
-      const specialPayout1 = round2(Math.min(payout1, inputs.specialCap));
-      const specialPayout2 = round2(Math.min(payout2, inputs.specialCap));
-      const team1BestOpportunityReturn = round2(payout1 + specialPayout2);
-      const team2BestOpportunityReturn = round2(payout2 + specialPayout1);
-
-      const scenarios = [
-        buildScenario(`${inputs.teamAName} Wins`, payout1, totalStake, `Normal case: only ${inputs.teamAName} payout is received because the winning bet lands.`),
-        buildScenario(`${inputs.teamBName} Wins`, payout2, totalStake, `Normal case: only ${inputs.teamBName} payout is received because the winning bet lands.`),
-        buildScenario(`${inputs.teamAName} Loses + Hits a Six`, specialPayout1, totalStake, `${inputs.teamAName} still pays despite losing because the first-over six condition was triggered.`),
-        buildScenario(`${inputs.teamBName} Loses + Hits a Six`, specialPayout2, totalStake, `${inputs.teamBName} still pays despite losing because the first-over six condition was triggered.`)
-      ];
-
-      const bestOpportunity = team1BestOpportunityReturn >= team2BestOpportunityReturn
-        ? {
-            name: `${inputs.teamAName} wins + ${inputs.teamBName} bonus`,
-            totalReturn: team1BestOpportunityReturn,
-            net: round2(team1BestOpportunityReturn - totalStake),
-            description: `${inputs.teamAName} wins normally and ${inputs.teamBName} loses after hitting a six, so both capped payouts are collected together.`,
-            specialSource: inputs.teamBName
-          }
-        : {
-            name: `${inputs.teamBName} wins + ${inputs.teamAName} bonus`,
-            totalReturn: team2BestOpportunityReturn,
-            net: round2(team2BestOpportunityReturn - totalStake),
-            description: `${inputs.teamBName} wins normally and ${inputs.teamAName} loses after hitting a six, so both capped payouts are collected together.`,
-            specialSource: inputs.teamAName
-          };
-
-      const hedgedNet = round2(Math.min(payout1, payout2) - totalStake);
-      const bestNet = Math.max(bestOpportunity.net, ...scenarios.map((item) => item.net));
-      const worstNet = Math.min(...scenarios.map((item) => item.net));
-      const maxPayout = Math.max(bestOpportunity.totalReturn, ...scenarios.map((item) => item.totalReturn));
+    function evaluatePair(stake1, stake2, odd1, odd2) {
+      const payout1 = payoutFor(stake1, odd1);
+      const payout2 = payoutFor(stake2, odd2);
+      const totalStake = round2(stake1 + stake2);
+      const team1WinNet = round2(payout1 - totalStake);
+      const team2WinNet = round2(payout2 - totalStake);
+      const combinedReturn = round2(payout1 + payout2);
+      const combinedNet = round2(combinedReturn - totalStake);
+      const worstNormal = Math.min(team1WinNet, team2WinNet);
+      const protectedReturn = Math.min(payout1, payout2);
+      const spread = Math.abs(team1WinNet - team2WinNet);
 
       return {
-        totalStake,
+        stake1: round2(stake1),
+        stake2: round2(stake2),
         payout1,
         payout2,
-        specialPayout1,
-        specialPayout2,
-        scenarios,
-        bestOpportunity,
-        hedgedNet,
-        bestNet,
-        worstNet,
-        maxPayout
+        totalStake,
+        team1WinNet,
+        team2WinNet,
+        combinedReturn,
+        combinedNet,
+        worstNormal,
+        protectedReturn,
+        spread,
+        active: totalStake > 0
       };
     }
 
-    function recommendation(analysis) {
-      const normalSpread = Math.abs(analysis.scenarios[0].net - analysis.scenarios[1].net);
-      if (analysis.bestOpportunity.net > Math.max(analysis.scenarios[0].net, analysis.scenarios[1].net) + 20) {
-        return "Bonus-Aware Edge: the combined win-plus-six branch materially improves the upside versus the normal result.";
-      }
-      if (analysis.worstNet >= -5 && normalSpread <= 6) {
-        return "Balanced Setup: both standard outcomes stay relatively close after stake and payout caps are applied.";
-      }
-      if (analysis.worstNet < -20) {
-        return "High Risk: one of the capped payout branches still leaves a meaningful downside.";
-      }
-      return "Controlled Exposure: payout caps keep the profile stable, but the bonus branch still matters for top-end profit.";
+    // All-in equal-payout strategy:
+    // The lower-odds side needs more stake to reach the same payout target,
+    // so that side gets the full max stake first.
+    //
+    // targetPayout = min(MAX_PAYOUT, lowerOdd * MAX_STAKE)
+    // otherStake = targetPayout / otherOdd
+    //
+    // This mirrors the "all-in max split" style and prioritizes the larger
+    // combined bonus upside while still keeping both normal payouts equal.
+    function optimizeStakes(odd1, odd2) {
+      const lowerIsTeam1 = odd1 <= odd2;
+      const targetPayout = round2(Math.min(MAX_PAYOUT, (lowerIsTeam1 ? odd1 : odd2) * MAX_STAKE));
+      const stake1 = lowerIsTeam1 ? MAX_STAKE : round2(targetPayout / odd1);
+      const stake2 = lowerIsTeam1 ? round2(targetPayout / odd2) : MAX_STAKE;
+      return evaluatePair(stake1, stake2, odd1, odd2);
     }
 
-    function summaryCopy(inputs, analysis) {
-      return `Each bet payout is capped at ${money(inputs.payoutCap)} and the special loss payout is capped at ${money(inputs.specialCap)}. The best combined branch reaches ${signedMoney(analysis.bestOpportunity.net)}.`;
+    function recommendation(result) {
+      if (result.worstNormal >= 0) {
+        return "⚡ Balanced hedge found: the optimizer produced a protected setup with non-negative normal outcomes.";
+      }
+      if (result.spread <= 1) {
+        return "🔥 All-in equal-payout mode: the lower-odds side is maxed and the second stake is scaled for matching returns.";
+      }
+      return "⚠️ Aggressive equal-payout mode: the split is still bonus-optimized, but one branch is slightly less balanced.";
     }
 
-    function render(inputs, split, analysis) {
-      els.teamAStakeLabel.textContent = `${inputs.teamAName} Stake`;
-      els.teamBStakeLabel.textContent = `${inputs.teamBName} Stake`;
-      els.hedgePill.textContent = "Manual Entry";
-      els.strategyLine.textContent = `${analysis.bestOpportunity.net > Math.max(analysis.scenarios[0].net, analysis.scenarios[1].net) ? "🔥" : "⚡"} ${recommendation(analysis)}`;
-      els.summaryNote.textContent = summaryCopy(inputs, analysis);
-      els.bestOpportunityDesc.textContent = analysis.bestOpportunity.description;
+    function render(inputs, result) {
+      const bestCase = Math.max(result.team1WinNet, result.team2WinNet, result.combinedNet);
+      const worstCase = Math.min(result.team1WinNet, result.team2WinNet);
 
-      animateCurrency(els.totalStakeStat, analysis.totalStake);
-      animateCurrency(els.maxPayoutStat, analysis.maxPayout);
-      animateCurrency(els.worstLossStat, Math.abs(Math.min(analysis.worstNet, 0)));
-      animateCurrency(els.bestProfitStat, Math.max(analysis.bestNet, 0));
-      animateCurrency(els.bestOpportunityNet, analysis.bestOpportunity.net, { signed: true });
-      animateCurrency(els.bestOpportunityReturn, analysis.bestOpportunity.totalReturn);
-      animateCurrency(els.bestOpportunityStake, analysis.totalStake);
-      animateCurrency(els.bestOpportunityProfit, analysis.bestOpportunity.net, { signed: true });
-      animateCurrency(els.teamAStakeValue, split.teamAStake);
-      animateCurrency(els.teamBStakeValue, split.teamBStake);
-      animateCurrency(els.teamAPayoutValue, analysis.payout1, { prefix: "Capped payout: " });
-      animateCurrency(els.teamBPayoutValue, analysis.payout2, { prefix: "Capped payout: " });
+      els.team1WinLabel.textContent = `${inputs.team1Name} Wins`;
+      els.team2WinLabel.textContent = `${inputs.team2Name} Wins`;
+      els.strategyLine.textContent = recommendation(result);
+      els.summaryNote.textContent = `The optimizer uses an all-in equal-payout strategy: the lower-odds side is pushed to the 100 USDT stake cap, then the other side is scaled so both standard payouts stay matched under the 250 USDT payout cap.`;
+      els.combinedDesc.textContent = `If the winner lands and the losing team still hits a six in the first over, both capped payouts are collected together.`;
+      els.optimizerDesc.textContent = `Matched standard payout on both outcomes.`;
+
+      animateCurrency(els.stake1Stat, result.stake1);
+      animateCurrency(els.stake2Stat, result.stake2);
+      animateCurrency(els.totalStakeStat, result.totalStake);
+      animateCurrency(els.maxPayoutStat, result.combinedReturn);
+      animateCurrency(els.bestProfitStat, Math.max(bestCase, 0));
+      animateCurrency(els.worstLossStat, Math.abs(Math.min(worstCase, 0)));
+      animateCurrency(els.team1WinNet, result.team1WinNet, { signed: true });
+      animateCurrency(els.team2WinNet, result.team2WinNet, { signed: true });
+      animateCurrency(els.team1WinReturn, result.payout1, { prefix: "Payout: " });
+      animateCurrency(els.team2WinReturn, result.payout2, { prefix: "Payout: " });
+      animateCurrency(els.combinedNet, result.combinedNet, { signed: true });
+      animateCurrency(els.combinedReturn, result.combinedReturn, { prefix: "Total payout: " });
+      animateCurrency(els.optimizerScore, result.protectedReturn);
+
+      els.team1WinNet.className = `big-number ${result.team1WinNet >= 0 ? "profit" : "loss"}`;
+      els.team2WinNet.className = `big-number ${result.team2WinNet >= 0 ? "profit" : "loss"}`;
+      els.combinedNet.className = `big-number ${result.combinedNet >= 0 ? "profit" : "loss"}`;
       pulseNodes();
     }
 
@@ -911,26 +682,15 @@
       try {
         clearError();
         const inputs = readInputs();
-        const split = { teamAStake: round2(inputs.teamAStake), teamBStake: round2(inputs.teamBStake) };
-        const analysis = analyze(inputs, split);
-        render(inputs, split, analysis);
+        const result = optimizeStakes(inputs.team1Odds, inputs.team2Odds);
+        render(inputs, result);
       } catch (error) {
         setError(error.message);
       }
     }
 
     els.calculateBtn.addEventListener("click", run);
-
-    [
-      els.teamAName,
-      els.teamBName,
-      els.teamAOdds,
-      els.teamBOdds,
-      els.teamAStake,
-      els.teamBStake,
-      els.payoutCap,
-      els.specialCap
-    ].forEach((el) => {
+    [els.team1Name, els.team2Name, els.team1Odds, els.team2Odds].forEach((el) => {
       el.addEventListener("input", run);
       el.addEventListener("change", run);
     });
